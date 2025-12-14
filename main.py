@@ -3,6 +3,7 @@ from random import paretovariate
 from tkinter import ttk, scrolledtext, messagebox
 import threading
 import time
+import sv_ttk
 
 #importuri selenium (sunt aici pentru usurinta)
 from selenium import webdriver
@@ -44,7 +45,7 @@ class NewsScraperApp:
     def __init__(self, master):
         self.master = master
         master.title("News Scraper GUI")
-        master.geometry("900x600")
+        master.geometry("900x700")
 
         # articol curent
         self.current_article = {"title": "", "content": "", "link": "", "site": ""}
@@ -60,9 +61,9 @@ class NewsScraperApp:
         self.site_dropdown.pack(pady=5)
 
         # zona text pentru articol
-        self.text_box = scrolledtext.ScrolledText(master, width=100, height=25, font=("Arial", 11))
+        self.text_box = scrolledtext.ScrolledText(master, width=100, height=25, font=("times new roman", 12))
         self.text_box.pack(pady=10)
-        self.text_box.insert(tk.END, "Press Find Article")
+        self.text_box.insert(tk.END, "\t\t\tPress Find Article")
 
         # BUTOANE
         button_frame = tk.Frame(master)
@@ -135,4 +136,5 @@ class NewsScraperApp:
 if __name__ == "__main__":
     root = tk.Tk()
     app = NewsScraperApp(root)
+    sv_ttk.set_theme("dark") #sa fie pe mod intunecat gen
     root.mainloop()
