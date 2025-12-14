@@ -86,12 +86,29 @@ class NewsScraperApp:
                                     command=self.show_source)
         self.source_btn.grid(row=0, column=1, padx=10)
 
-        self.source_btn = ttk.Button(button_frame, text="Stirile zilei", width=20,
+        self.full_load_btn = ttk.Button(button_frame, text="Stirile zilei", width=20,
                                      command=self.start_all_news)
-        self.source_btn.grid(row=0, column=2, padx=10)
+        self.full_load_btn.grid(row=0, column=2, padx=10)
 
     #functie care ruleaza si afiseaza o stire din fiecare sursa
     def start_all_news(self):
+        site = self.site_var.get()
+        self.full_load_btn.config(state=tk.DISABLED, text="ASTEAPTA BAAAA!!!")
+        self.text_box.delete("1.0", tk.END)
+        self.text_box.insert(tk.END, "Se incarca. Va rugam sa asteptati...\n", "Titlu")
+
+        # thread start
+        for sites in SCRAPERS:
+            #site = self.sites.get()
+            scraper_thread = threading.Thread(target=self.special_run_scraper, args=(sites,))
+            scraper_thread.start()
+        #self.text_box.delete("1.0", "2.0")
+
+        #ruleaza in loop toate sursele de stiri
+
+    # functie care rulează scraper-ul într-un thread separat
+    #evita blocarea interfetei
+    def start_scraper_thread(self):
         site = self.site_var.get()
         self.load_btn.config(state=tk.DISABLED, text="ASTEAPTA BAAAA!!!")
         self.text_box.delete("1.0", tk.END)
@@ -100,22 +117,7 @@ class NewsScraperApp:
         # thread start
         scraper_thread = threading.Thread(target=self.run_scraper, args=(site,))
         scraper_thread.start()
-        #ruleaza in loop toate sursele de stiri
 
-    # functie care rulează scraper-ul într-un thread separat
-    #evita blocarea interfetei
-    def start_scraper_thread(self):
-        self.load_btn.config(state=tk.DISABLED, text="ASTEAPTA BAAAA!!!")
-        self.text_box.delete("1.0", tk.END)
-        self.text_box.insert(tk.END, "Se incarca. Va rugam sa asteptati...\n", "Titlu")
-        time.sleep(3)
-        self.text_box.delete("1.0", tk.END)
-
-        # thread start
-        for sites in SCRAPERS:
-            site = self.sites.get()
-            scraper_thread = threading.Thread(target=self.run_scraper, args=(site,))
-            scraper_thread.start()
 
     # functie rulata de thread (executa selenium)
     def run_scraper(self, site):
@@ -123,6 +125,16 @@ class NewsScraperApp:
             data = SCRAPERS[site]()
             # comunica rezultat la firul principal
             self.master.after(0, self.update_gui_success, site, data)
+        except Exception as e:
+            # comunica eroarea la firul principal
+            self.master.after(0, self.update_gui_error, str(e))
+
+    #tot thread dar adauga in gui fara sa stearga
+    def special_run_scraper(self, site):
+        try:
+            data = SCRAPERS[site]()
+            # comunica rezultat la firul principal
+            self.master.after(0, self.add_gui_success, site, data)
         except Exception as e:
             # comunica eroarea la firul principal
             self.master.after(0, self.update_gui_error, str(e))
@@ -140,7 +152,7 @@ class NewsScraperApp:
 
         self.load_btn.config(state=tk.NORMAL, text="Find article")
 
-    #functie care adauga text in continoare
+    #functie care adauga text in continuare dupa succes
     def add_gui_success(self, site, data):
         self.current_article = data
         self.current_article["site"] = site
@@ -151,7 +163,7 @@ class NewsScraperApp:
         self.text_box.insert(tk.END, f"Link: {self.current_article['link']}\n", "SursaTag")
         self.text_box.insert(tk.END, f"\n\n\n")
 
-        self.load_btn.config(state=tk.NORMAL, text="Find article")
+        self.full_load_btn.config(state=tk.NORMAL, text="Stirile Zilei")
         ##doar adauga in continuare in loc sa stearga ce e pe ecran inainte
 
     # functie pentru actualizarea GUI dupa eroare
