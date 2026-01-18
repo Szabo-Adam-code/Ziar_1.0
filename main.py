@@ -55,6 +55,12 @@ class NewsScraperApp:
         master.title("News Scraper GUI")
         master.geometry("900x850")
 
+        # buton de setari
+        style = ttk.Style()
+        style.configure("Setari.TButton", font=("arial", 17))
+        self.settings_btn=ttk.Button(master, text="⚙", width=1.5, command=self.settings_btn_action, style="Setari.TButton")
+        self.settings_btn.place(relx=1, x=-20, y=20, anchor="ne")
+
         # articol curent
         self.current_article = {"title": "", "content": "", "link": "", "site": ""}
         self.active_threads = 0
@@ -110,6 +116,11 @@ class NewsScraperApp:
 
         self.full_load_btn = ttk.Button(button_frame, text="Stirile zilei", width=15, command=self.start_all_news)
         self.full_load_btn.grid(row=0, column=3, padx=5)
+
+
+    # --- FUNCTIA DE SETARI ---
+    def settings_btn_action(self):
+        ana=3
 
     # --- PERSITANT DATA ---
     def save_preferences(self):
@@ -209,6 +220,6 @@ class NewsScraperApp:
 
 if __name__ == "__main__":
     root = tk.Tk()
-    app = NewsScraperApp(root)
     sv_ttk.set_theme("dark")
+    app = NewsScraperApp(root)
     root.mainloop()
