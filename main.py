@@ -39,6 +39,9 @@ SCRAPERS = {
     "Digi24": scrape_digi24,
     "ProTV": scrape_PROTV,
     "Libertatea": scrape_Libertatea,
+    "HotNews" : scrape_HotNews,
+    "Observator" : scrape_Observator,
+    "G4Media" : scrape_G4Media,
 }
 
 # //////////////////////////////////////
