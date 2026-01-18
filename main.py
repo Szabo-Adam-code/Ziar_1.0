@@ -5,7 +5,7 @@ import threading
 import time
 import sv_ttk
 import json
-import os
+import os #tEeeeeeeeeeeeeeeeeest
 
 # importuri selenium (sunt aici pentru usurinta)
 from selenium import webdriver
