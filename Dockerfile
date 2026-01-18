@@ -31,7 +31,7 @@ RUN apt-get update && apt-get install -y \
 
 #instalam dependintele de python
 
-COPY requirements.txt .
+COPY Requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # codul aplicatiei
