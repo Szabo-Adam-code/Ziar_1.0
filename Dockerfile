@@ -1,6 +1,12 @@
 FROM python:3.11-slim
 #defineste versiunea de python 
 
+#setez variabila display pentru procesele din docker
+ENV DISPLAY=:99
+
+#accept pt linux sa nu mai am prompt de da/nu cand instalez pachetele
+ENV DEBIAN_FRONTEND=noninteractive
+
 #Dependinte de sistem ca nu vreau sa mut tot codul de scraping in alt .py
 RUN apt-get update && apt-get install -y \
     xvfb \
@@ -32,7 +38,7 @@ RUN apt-get update && apt-get install -y \
 #instalam dependintele de python
 
 COPY Requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r Requirements.txt
 
 # codul aplicatiei
 COPY . .
